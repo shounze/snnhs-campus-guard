@@ -1,0 +1,1473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNNHS · Campus Guard</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f0f7f0;
+            min-height: 100vh;
+        }
+
+        /* Login Page Styles */
+        .login-page {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #9fcb8b;
+            box-shadow: 0 8px 0 #0f3a13;
+            background: white;
+        }
+
+        .logo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .logo h1 {
+            color: #1e5622;
+            font-size: 1.8rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo p {
+            color: #2e6d2e;
+            font-size: 0.9rem;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 36px;
+            padding: 2rem;
+            box-shadow: 0 22px 36px -12px rgba(20, 80, 30, 0.25);
+            border: 1px solid #b7dcb7;
+        }
+
+        .tab-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2f4e0;
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.8rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7a9e7a;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #1e5622;
+            color: white;
+            box-shadow: 0 4px 0 #0f3a13;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1e5622;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        label i {
+            color: #2b7931;
+            width: 20px;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 1rem 1.3rem;
+            border: 2px solid #b7dcb7;
+            border-radius: 30px;
+            font-size: 1rem;
+            background: #fafefa;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-color: #2b7931;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(43, 121, 49, 0.15);
+        }
+
+        .btn-login {
+            width: 100%;
+            background: #1e5622;
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #0f3a13;
+            transition: 0.1s ease;
+            margin-top: 1rem;
+        }
+
+        .btn-login:hover {
+            background: #2b7931;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #0f3a13;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .error-message {
+            color: #c53030;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Main App Styles */
+        .app-page {
+            display: none;
+        }
+
+        .app-page.active {
+            display: block;
+        }
+
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(2px);
+            z-index: 999;
+        }
+
+        .nav-overlay.show {
+            display: block;
+        }
+
+        .side-nav {
+            height: 100%;
+            width: 280px;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: -280px;
+            background: linear-gradient(180deg, #1a4f1e 0%, #1e5622 100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            padding-top: 20px;
+            box-shadow: 4px 0 15px rgba(0, 40, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .side-nav.open {
+            transform: translateX(280px);
+        }
+
+        .nav-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            background: #f5f7d0;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1e5622;
+            font-size: 1.5rem;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+
+        .user-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .user-details h4 {
+            font-size: 1.1rem;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 160px;
+        }
+
+        .user-details p {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #9fcb8b;
+        }
+
+        .user-details .admin-badge {
+            background: #ffc107;
+            color: #1e5622;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-top: 4px;
+            display: inline-block;
+        }
+
+        .nav-items-container {
+            flex: 1;
+        }
+
+        .nav-item {
+            padding: 14px 25px;
+            color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: 0.2s;
+            text-decoration: none;
+            border-left: 4px solid transparent;
+            margin: 4px 0;
+        }
+
+        .nav-item i {
+            width: 20px;
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .nav-item.active {
+            background: rgba(255, 255, 255, 0.15);
+            color: #f5f7d0;
+            border-left-color: #f5f7d0;
+            font-weight: 600;
+        }
+
+        .nav-footer {
+            padding: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .logout-btn {
+            color: #ff9999;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            cursor: pointer;
+            border-radius: 10px;
+            transition: 0.2s;
+            width: 100%;
+            background: rgba(255, 80, 80, 0.1);
+            border: 1px solid rgba(255, 80, 80, 0.2);
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 80, 80, 0.2);
+        }
+
+        .main-content {
+            transition: margin-left 0.3s ease;
+            padding: 1rem;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .top-bar {
+            background: white;
+            border-radius: 15px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(0, 40, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: sticky;
+            top: 10px;
+            z-index: 900;
+        }
+
+        .menu-btn {
+            background: #e2f4e0;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            color: #1e5622;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .brand-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 8px;
+            overflow: hidden;
+            background: white;
+            border: 2px solid #1e5622;
+        }
+
+        .brand-logo img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .brand-text strong {
+            display: block;
+            color: #1e5622;
+            font-size: 1rem;
+            line-height: 1;
+        }
+
+        .brand-text small {
+            color: #666;
+            font-size: 0.75rem;
+        }
+
+        .content-section {
+            display: none;
+            animation: slideUp 0.4s ease-out;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-card, .profile-card, .about-card, .reports-card {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 1px solid #e0eadd;
+        }
+
+        .name-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .incident-details {
+            background: #f9fff9;
+            border-radius: 12px;
+            padding: 15px;
+            margin: 15px 0;
+            border: 1px dashed #9fcb8b;
+        }
+
+        .date-time-row {
+            display: flex;
+            gap: 10px;
+        }
+
+        .checkbox-privacy {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin: 15px 0;
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .checkbox-privacy input {
+            width: 18px;
+            height: 18px;
+        }
+
+        .btn-submit {
+            background: #1e5622;
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 4px 0 #0f3a13;
+        }
+
+        .btn-submit:hover {
+            background: #2b7931;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #0f3a13;
+        }
+
+        .fine-print {
+            text-align: center;
+            margin-top: 15px;
+            color: #8aa88a;
+            font-size: 0.85rem;
+        }
+
+        .toast-message {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e5622;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 50px;
+            display: none;
+            z-index: 2000;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .toast-message.show {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: fadeInUp 0.3s;
+        }
+
+        @keyframes fadeInUp {
+            from { bottom: 0; opacity: 0; }
+            to { bottom: 20px; opacity: 1; }
+        }
+
+        .profile-info {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .profile-info p {
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px dashed #ddd;
+            padding-bottom: 8px;
+        }
+
+        .profile-info i {
+            width: 20px;
+            color: #1e5622;
+        }
+
+        .mission-quote {
+            background: #1e5622;
+            color: white;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            font-size: 1.2rem;
+            font-style: italic;
+            text-align: center;
+            box-shadow: 0 5px 0 #0f3a13;
+        }
+
+        .section-title {
+            color: #1e5622;
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+
+        .about-text {
+            line-height: 1.7;
+            color: #444;
+            margin: 15px 0;
+        }
+
+        .promise-list {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .promise-list li {
+            margin: 12px 0;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 12px;
+            border-radius: 10px;
+        }
+
+        .promise-list i {
+            color: #1e5622;
+            width: 20px;
+        }
+
+        .team-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .team-card {
+            text-align: center;
+            padding: 15px;
+            background: #f9f9f9;
+            border-radius: 12px;
+            border: 1px solid #e0eadd;
+        }
+
+        .team-card i {
+            font-size: 2rem;
+            color: #1e5622;
+            margin-bottom: 8px;
+        }
+
+        .team-card h4 {
+            color: #1e5622;
+            margin-bottom: 5px;
+            font-size: 1rem;
+        }
+
+        .team-card p {
+            color: #666;
+            font-size: 0.85rem;
+        }
+
+        .contact-email {
+            text-align: center;
+            margin-top: 20px;
+            padding: 12px;
+            background: #e2f4e0;
+            border-radius: 30px;
+            color: #1e5622;
+            font-weight: 500;
+        }
+
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .report-count {
+            background: #1e5622;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            box-shadow: 0 3px 0 #0f3a13;
+        }
+
+        .report-item {
+            background: #f9f9f9;
+            border-radius: 16px;
+            padding: 18px;
+            margin-bottom: 18px;
+            border-left: 6px solid #1e5622;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            transition: all 0.2s;
+        }
+
+        .report-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0,40,0,0.1);
+        }
+
+        .report-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .report-id {
+            font-weight: bold;
+            color: #1e5622;
+            background: #e2f4e0;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+        }
+
+        .report-date {
+            color: #666;
+            font-size: 0.85rem;
+            background: #eee;
+            padding: 4px 12px;
+            border-radius: 30px;
+        }
+
+        .report-detail {
+            margin: 10px 0;
+            display: flex;
+            gap: 12px;
+            align-items: flex-start;
+        }
+
+        .report-detail i {
+            width: 22px;
+            color: #1e5622;
+            font-size: 1rem;
+            margin-top: 3px;
+        }
+
+        .report-label {
+            font-weight: 600;
+            color: #444;
+            min-width: 110px;
+            font-size: 0.9rem;
+        }
+
+        .report-value {
+            color: #555;
+            flex: 1;
+            line-height: 1.5;
+        }
+
+        .anonymous-badge {
+            background: #ffc107;
+            color: #1e5622;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 10px;
+            display: inline-block;
+            box-shadow: 0 2px 0 #b38f00;
+        }
+
+        .no-reports {
+            text-align: center;
+            padding: 50px 20px;
+            color: #999;
+            font-style: italic;
+            background: #f9f9f9;
+            border-radius: 20px;
+        }
+
+        .no-reports i {
+            font-size: 4rem;
+            opacity: 0.3;
+            margin-bottom: 15px;
+            color: #1e5622;
+        }
+
+        .clear-reports-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+        }
+
+        .clear-btn {
+            background: linear-gradient(145deg, #dc3545, #b02a37);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 6px 0 #7a1c24, 0 8px 15px rgba(220, 53, 69, 0.3);
+            transition: all 0.2s ease;
+            letter-spacing: 0.5px;
+        }
+
+        .clear-btn i {
+            font-size: 1.1rem;
+        }
+
+        .clear-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 9px 0 #7a1c24, 0 12px 20px rgba(220, 53, 69, 0.4);
+        }
+
+        .clear-btn:active {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #7a1c24, 0 5px 10px rgba(220, 53, 69, 0.3);
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+            z-index: 3000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 350px;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: modalPop 0.3s ease;
+        }
+
+        @keyframes modalPop {
+            from { transform: scale(0.8); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            color: #dc3545;
+            margin-bottom: 15px;
+        }
+
+        .modal-title {
+            color: #1e5622;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .modal-message {
+            color: #666;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+
+        .modal-buttons {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+        }
+
+        .modal-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: 0.2s;
+            flex: 1;
+        }
+
+        .modal-btn-cancel {
+            background: #e2f4e0;
+            color: #1e5622;
+            box-shadow: 0 4px 0 #b7dcb7;
+        }
+
+        .modal-btn-cancel:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #b7dcb7;
+        }
+
+        .modal-btn-confirm {
+            background: #dc3545;
+            color: white;
+            box-shadow: 0 4px 0 #7a1c24;
+        }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 0 #7a1c24;
+        }
+
+        @media (min-width: 1024px) {
+            .side-nav { left: 0; }
+            .main-content { margin-left: 280px; width: calc(100% - 280px); }
+            .menu-btn { display: none; }
+            .nav-overlay { display: none !important; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Page -->
+    <div id="loginPage" class="login-page">
+        <div class="login-container">
+            <div class="logo">
+                <div class="logo-image">
+                    <img src="snnhs.jpg" alt="SNNHS Logo">
+                </div>
+                <h1>STO. NIÑO NHS</h1>
+                <p>MARIKINA CITY · DEPED NCR</p>
+            </div>
+            
+            <div class="login-card">
+                <div class="tab-buttons">
+                    <button class="tab-btn active" id="loginTab">LOG IN</button>
+                    <button class="tab-btn" id="signupTab">SIGN UP</button>
+                </div>
+                
+                <div id="loginForm">
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="loginEmail" placeholder="Enter your email">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="loginPassword" placeholder="Enter your password">
+                    </div>
+                    <button class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOG IN</button>
+                    <div id="loginError" class="error-message hidden"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+                </div>
+                
+                <div id="signupForm" class="hidden">
+                    <div class="form-group">
+                        <label><i class="fas fa-user-circle"></i> Full Name</label>
+                        <input type="text" id="signupName" placeholder="Enter your full name">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-envelope"></i> Email</label>
+                        <input type="email" id="signupEmail" placeholder="your@email.com">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="signupPassword" placeholder="Create password">
+                    </div>
+                    <div class="form-group">
+                        <label><i class="fas fa-lock"></i> Confirm Password</label>
+                        <input type="password" id="signupConfirm" placeholder="Confirm password">
+                    </div>
+                    <button class="btn-login" id="signupBtn"><i class="fas fa-user-plus"></i> CREATE ACCOUNT</button>
+                    <div id="signupError" class="error-message hidden"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App Page -->
+    <div id="appPage" class="app-page">
+        <div id="confirmModal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h3 class="modal-title">Clear All Reports?</h3>
+                <p class="modal-message">This will permanently delete ALL submitted reports. This action cannot be undone!</p>
+                <div class="modal-buttons">
+                    <button class="modal-btn modal-btn-cancel" onclick="hideModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                    <button class="modal-btn modal-btn-confirm" onclick="confirmClearReports()">
+                        <i class="fas fa-trash-alt"></i> Delete All
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="navOverlay" class="nav-overlay" onclick="toggleNav()"></div>
+
+        <div id="sideNav" class="side-nav">
+            <div class="nav-header" id="navHeader">
+                <div class="user-info">
+                    <div class="user-avatar">
+                        <img src="snnhs.jpg" alt="Logo">
+                    </div>
+                    <div class="user-details">
+                        <h4 id="userName">Guest User</h4>
+                        <p id="userRole">MEMBER</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="nav-items-container">
+                <div class="nav-item active" onclick="showSection('report', this)" id="navReport">
+                    <i class="fas fa-flag"></i> Report Incident
+                </div>
+                <div class="nav-item" onclick="showSection('profile', this)" id="navProfile">
+                    <i class="fas fa-user-circle"></i> My Profile
+                </div>
+                <div class="nav-item" onclick="showSection('reports', this)" id="navReports" style="display: none;">
+                    <i class="fas fa-clipboard-list"></i> View Reports
+                </div>
+                <div class="nav-item" onclick="showSection('about', this)" id="navAbout">
+                    <i class="fas fa-info-circle"></i> About Us
+                </div>
+            </div>
+
+            <div class="nav-footer">
+                <div class="logout-btn" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i> Logout Session
+                </div>
+            </div>
+        </div>
+
+        <div id="mainContent" class="main-content">
+            <div class="top-bar">
+                <button class="menu-btn" onclick="toggleNav()">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <div class="brand">
+                    <div class="brand-logo">
+                        <img src="snnhs.jpg" alt="SNNHS Logo">
+                    </div>
+                    <div class="brand-text">
+                        <strong>STO. NIÑO NHS</strong>
+                        <small>Campus Guard System</small>
+                    </div>
+                </div>
+            </div>
+
+            <div id="reportSection" class="content-section active">
+                <div class="form-card">
+                    <h2 style="color:#1e5622; margin-bottom:20px;"><i class="fas fa-flag" style="margin-right:10px;"></i> Report an Incident</h2>
+                    <form id="reportForm">
+                        <div class="name-row">
+                            <div class="form-group">
+                                <label><i class="fas fa-user-circle"></i> First name</label>
+                                <input type="text" id="firstName" placeholder="Enter your first name" required>
+                            </div>
+                            <div class="form-group">
+                                <label><i class="fas fa-user-circle"></i> Last name</label>
+                                <input type="text" id="lastName" placeholder="Enter your last name (optional)">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-user-graduate"></i> Person you're reporting</label>
+                            <input type="text" id="reportedPerson" placeholder="Enter full name or role if known">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-tag"></i> Role of reported person</label>
+                            <select id="roleReported">
+                                <option value="student">Student</option>
+                                <option value="teacher">Teacher / Staff</option>
+                                <option value="other">Other / Unknown</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-pen"></i> What happened?</label>
+                            <textarea id="description" rows="4" placeholder="Describe the incident (location, time, details, etc.)" required></textarea>
+                        </div>
+
+                        <div class="incident-details">
+                            <label><i class="fas fa-calendar-alt"></i> When did it occur?</label>
+                            <div class="date-time-row">
+                                <input type="date" id="incidentDate">
+                                <input type="time" id="incidentTime">
+                            </div>
+
+                            <label style="margin-top:15px;"><i class="fas fa-map-pin"></i> Location on campus</label>
+                            <input type="text" id="location" placeholder="e.g. Grade 9 building, covered court, canteen">
+                        </div>
+
+                        <div class="form-group">
+                            <label><i class="fas fa-clock"></i> Report date</label>
+                            <input type="date" id="reportDate" readonly>
+                        </div>
+
+                        <div class="checkbox-privacy">
+                            <input type="checkbox" id="anonymousOpt" checked>
+                            <label for="anonymousOpt" style="margin:0;"> Keep my identity confidential</label>
+                        </div>
+
+                        <button class="btn-submit" type="button" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Submit Report
+                        </button>
+
+                        <p class="fine-print">
+                            <i class="fas fa-lock"></i> Encrypted · Anonymous by default
+                        </p>
+                    </form>
+                </div>
+            </div>
+
+            <div id="profileSection" class="content-section">
+                <div class="profile-card">
+                    <h2 style="color:#1e5622; margin-bottom:20px;"><i class="fas fa-user-circle" style="margin-right:10px;"></i> My Profile</h2>
+                    <div id="profileInfo" class="profile-info"></div>
+                </div>
+            </div>
+
+            <div id="reportsSection" class="content-section">
+                <div class="reports-card">
+                    <div class="reports-header">
+                        <h2 style="color:#1e5622;"><i class="fas fa-clipboard-list" style="margin-right:10px;"></i> All Reports</h2>
+                        <span class="report-count" id="reportCount">0 reports</span>
+                    </div>
+
+                    <div class="clear-reports-container">
+                        <button class="clear-btn" onclick="showClearConfirmation()">
+                            <i class="fas fa-trash-alt"></i> Clear All Reports
+                        </button>
+                    </div>
+
+                    <div id="reportsList">
+                        <div class="no-reports">
+                            <i class="fas fa-inbox"></i>
+                            <p>No reports have been submitted yet.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="aboutSection" class="content-section">
+                <div class="about-card">
+                    <h2 style="color:#1e5622; margin-bottom:15px;"><i class="fas fa-heart" style="margin-right:10px;"></i> About Us</h2>
+
+                    <div class="mission-quote">
+                        <i class="fas fa-quote-left"></i>
+                        "We want the unheard to be heard and make a safe place for people to report and make the campus safe and prevent any problems."
+                        <i class="fas fa-quote-right"></i>
+                    </div>
+
+                    <h3 class="section-title"><i class="fas fa-history"></i> Our Story</h3>
+                    <p class="about-text">
+                        We are a group of students from Sto. Niño National High School who saw the need for a safe, confidential way for students and staff to speak up about issues affecting our campus community. Too often, voices go unheard and problems go unaddressed because people are afraid to speak up.
+                    </p>
+
+                    <h3 class="section-title"><i class="fas fa-bullseye"></i> Our Mission</h3>
+                    <p class="about-text">
+                        The SNNHS Campus Guard was created to give everyone a voice. Whether it's reporting concerns about safety, substance use, or any issue that threatens our wellbeing, we believe that speaking up is an act of courage and care. Every report helps us build a stronger, safer, and more supportive school environment.
+                    </p>
+
+                    <h3 class="section-title"><i class="fas fa-hand-holding-heart"></i> Our Promise</h3>
+                    <ul class="promise-list">
+                        <li><i class="fas fa-lock"></i> Your identity is protected - you can report anonymously</li>
+                        <li><i class="fas fa-clock"></i> Reports are reviewed within 24 hours</li>
+                        <li><i class="fas fa-hand-holding-heart"></i> We focus on help and intervention, not punishment</li>
+                    </ul>
+
+                    <h3 class="section-title"><i class="fas fa-users"></i> Meet the Developers</h3>
+                    <div class="team-section">
+                        <div class="team-card">
+                            <i class="fas fa-crown"></i>
+                            <h4>Ryhzen Cheng</h4>
+                            <p>Leader</p>
+                        </div>
+                        <div class="team-card">
+                            <i class="fas fa-pen"></i>
+                            <h4>Dhincelle Guir Maurillo</h4>
+                            <p>Secretary</p>
+                        </div>
+                        <div class="team-card">
+                            <i class="fas fa-code"></i>
+                            <h4>Jasley De Vera</h4>
+                            <p>Member</p>
+                        </div>
+                        <div class="team-card">
+                            <i class="fas fa-code"></i>
+                            <h4>Nyson Alvier Agcaoili</h4>
+                            <p>Member</p>
+                        </div>
+                    </div>
+
+                    <div class="contact-email">
+                        <i class="fas fa-envelope"></i> snnhs.marikina@deped.gov.ph
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="liveToast" class="toast-message">
+            <i class="fas fa-check-circle"></i> <span id="toastText">Report submitted successfully!</span>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let reports = JSON.parse(localStorage.getItem('snnhs_reports')) || [];
+
+        function showApp() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('appPage').classList.add('active');
+            checkAuth();
+        }
+
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'flex';
+            document.getElementById('appPage').classList.remove('active');
+        }
+
+        document.getElementById('loginTab').addEventListener('click', function() {
+            document.getElementById('loginTab').classList.add('active');
+            document.getElementById('signupTab').classList.remove('active');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+        });
+
+        document.getElementById('signupTab').addEventListener('click', function() {
+            document.getElementById('signupTab').classList.add('active');
+            document.getElementById('loginTab').classList.remove('active');
+            document.getElementById('signupForm').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+        });
+
+        let users = JSON.parse(localStorage.getItem('snnhs_users')) || [];
+
+        let adminExists = users.some(u => u.email === 'admin@snnhs.edu.ph');
+        if (!adminExists) {
+            users.push({
+                name: 'Admin User',
+                email: 'admin@snnhs.edu.ph',
+                password: 'admin123',
+                role: 'admin'
+            });
+            localStorage.setItem('snnhs_users', JSON.stringify(users));
+        }
+
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            let email = document.getElementById('loginEmail').value.trim();
+            let password = document.getElementById('loginPassword').value.trim();
+            let errorDiv = document.getElementById('loginError');
+            let errorSpan = errorDiv.querySelector('span');
+
+            if (!email || !password) {
+                errorSpan.innerText = 'Please enter both email and password';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('snnhs_users'));
+            let user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                localStorage.setItem('snnhs_current_user', JSON.stringify({
+                    name: user.name,
+                    email: user.email,
+                    role: user.role || 'user'
+                }));
+                showApp();
+            } else {
+                errorSpan.innerText = 'Invalid email or password';
+                errorDiv.classList.remove('hidden');
+            }
+        });
+
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            let name = document.getElementById('signupName').value.trim();
+            let email = document.getElementById('signupEmail').value.trim();
+            let password = document.getElementById('signupPassword').value.trim();
+            let confirm = document.getElementById('signupConfirm').value.trim();
+            let errorDiv = document.getElementById('signupError');
+            let errorSpan = errorDiv.querySelector('span');
+
+            if (!name || !email || !password || !confirm) {
+                errorSpan.innerText = 'Please fill in all fields';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            if (password !== confirm) {
+                errorSpan.innerText = 'Passwords do not match';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            let users = JSON.parse(localStorage.getItem('snnhs_users'));
+
+            if (users.find(u => u.email === email)) {
+                errorSpan.innerText = 'Email already registered';
+                errorDiv.classList.remove('hidden');
+                return;
+            }
+
+            let newUser = {
+                name: name,
+                email: email,
+                password: password,
+                role: 'user'
+            };
+
+            users.push(newUser);
+            localStorage.setItem('snnhs_users', JSON.stringify(users));
+            localStorage.setItem('snnhs_current_user', JSON.stringify({
+                name: name,
+                email: email,
+                role: 'user'
+            }));
+            showApp();
+        });
+
+        function checkAuth() {
+            const user = localStorage.getItem('snnhs_current_user');
+            if (!user) {
+                currentUser = {
+                    name: "Guest User",
+                    email: "guest@snnhs.edu.ph",
+                    role: "user"
+                };
+            } else {
+                currentUser = JSON.parse(user);
+            }
+            updateUI();
+            setDates();
+            setupAdminUI();
+        }
+
+        function setupAdminUI() {
+            const navReports = document.getElementById('navReports');
+            if (currentUser.role === 'admin') {
+                navReports.style.display = 'flex';
+                document.getElementById('userRole').innerHTML = 'ADMIN <span class="admin-badge">👑</span>';
+            } else {
+                navReports.style.display = 'none';
+            }
+        }
+
+        function updateUI() {
+            document.getElementById('userName').innerText = currentUser.name || 'User';
+            document.getElementById('profileInfo').innerHTML = `
+                <p><i class="fas fa-user"></i> <strong>Name:</strong> ${currentUser.name || 'Not provided'}</p>
+                <p><i class="fas fa-envelope"></i> <strong>Email:</strong> ${currentUser.email || 'Not provided'}</p>
+                <p><i class="fas fa-id-badge"></i> <strong>Role:</strong> ${currentUser.role === 'admin' ? 'Administrator 👑' : 'Regular User'}</p>
+                <p><i class="fas fa-calendar"></i> <strong>Member since:</strong> ${new Date().toLocaleDateString()}</p>
+                <p><i class="fas fa-check-circle"></i> <strong>Status:</strong> Active</p>
+            `;
+        }
+
+        function setDates() {
+            const today = new Date().toISOString().split('T')[0];
+            const reportDate = document.getElementById('reportDate');
+            const incidentDate = document.getElementById('incidentDate');
+
+            if (reportDate) reportDate.value = today;
+            if (incidentDate) incidentDate.value = today;
+
+            const incidentTime = document.getElementById('incidentTime');
+            if (incidentTime) {
+                const now = new Date();
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                incidentTime.value = hours + ':' + minutes;
+            }
+        }
+
+        function toggleNav() {
+            const nav = document.getElementById('sideNav');
+            const overlay = document.getElementById('navOverlay');
+            nav.classList.toggle('open');
+            overlay.classList.toggle('show');
+            document.body.style.overflow = nav.classList.contains('open') ? 'hidden' : 'auto';
+        }
+
+        function showSection(section, element) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.content-section').forEach(s => s.classList.remove('active'));
+            document.getElementById(section + 'Section').classList.add('active');
+            if (section === 'reports') loadReports();
+            if (window.innerWidth < 1024) toggleNav();
+        }
+
+        function loadReports() {
+            const reportsList = document.getElementById('reportsList');
+            const reportCount = document.getElementById('reportCount');
+            reports = JSON.parse(localStorage.getItem('snnhs_reports')) || [];
+            reportCount.innerText = reports.length + ' report' + (reports.length !== 1 ? 's' : '');
+            
+            if (reports.length === 0) {
+                reportsList.innerHTML = '<div class="no-reports"><i class="fas fa-inbox"></i><p>No reports have been submitted yet.</p></div>';
+                return;
+            }
+
+            let html = '';
+            reports.slice().reverse().forEach((report, index) => {
+                const reportNumber = reports.length - index;
+                const anonymous = report.anonymous ? '<span class="anonymous-badge">ANONYMOUS</span>' : '';
+                html += `
+                    <div class="report-item">
+                        <div class="report-header">
+                            <span class="report-id">Report #${reportNumber}</span>
+                            <span class="report-date">${report.reportDate || new Date().toLocaleDateString()}</span>
+                        </div>
+                        <div class="report-detail">
+                            <i class="fas fa-user"></i>
+                            <span class="report-label">Reporter:</span>
+                            <span class="report-value">${report.firstName} ${report.lastName || ''} ${anonymous}</span>
+                        </div>
+                        <div class="report-detail">
+                            <i class="fas fa-user-graduate"></i>
+                            <span class="report-label">Reported Person:</span>
+                            <span class="report-value">${report.reportedPerson || 'Not specified'} (${report.roleReported || 'Unknown'})</span>
+                        </div>
+                        <div class="report-detail">
+                            <i class="fas fa-pen"></i>
+                            <span class="report-label">Incident:</span>
+                            <span class="report-value">${report.description}</span>
+                        </div>
+                        <div class="report-detail">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span class="report-label">Date/Time:</span>
+                            <span class="report-value">${report.incidentDate || 'Unknown'} at ${report.incidentTime || 'Unknown'}</span>
+                        </div>
+                        <div class="report-detail">
+                            <i class="fas fa-map-pin"></i>
+                            <span class="report-label">Location:</span>
+                            <span class="report-value">${report.location || 'Not specified'}</span>
+                        </div>
+                    </div>
+                `;
+            });
+            reportsList.innerHTML = html;
+        }
+
+        function showClearConfirmation() {
+            document.getElementById('confirmModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function hideModal() {
+            document.getElementById('confirmModal').classList.remove('show');
+            document.body.style.overflow = 'auto';
+        }
+
+        function confirmClearReports() {
+            localStorage.removeItem('snnhs_reports');
+            reports = [];
+            loadReports();
+            hideModal();
+            showToast('All reports have been cleared', '🗑️');
+        }
+
+        function showToast(message, icon = '✅') {
+            const toast = document.getElementById('liveToast');
+            const toastText = document.getElementById('toastText');
+            toastText.innerText = icon + ' ' + message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        function logout() {
+            localStorage.removeItem('snnhs_current_user');
+            showToast('Logging out...', '👋');
+            setTimeout(() => showLogin(), 1500);
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', function() {
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const reportedPerson = document.getElementById('reportedPerson').value.trim();
+            const roleReported = document.getElementById('roleReported').value;
+            const description = document.getElementById('description').value.trim();
+            const incidentDate = document.getElementById('incidentDate').value;
+            const incidentTime = document.getElementById('incidentTime').value;
+            const location = document.getElementById('location').value.trim();
+            const anonymous = document.getElementById('anonymousOpt').checked;
+
+            if (!firstName || !description) {
+                showToast('First name & description required', '⚠️');
+                return;
+            }
+
+            const report = {
+                id: Date.now(),
+                firstName,
+                lastName,
+                reportedPerson,
+                roleReported,
+                description,
+                incidentDate,
+                incidentTime,
+                location: location || 'Not specified',
+                reportDate: new Date().toLocaleDateString(),
+                anonymous,
+                reporterEmail: currentUser.email,
+                reporterName: anonymous ? 'Anonymous' : currentUser.name
+            };
+
+            reports.push(report);
+            localStorage.setItem('snnhs_reports', JSON.stringify(reports));
+            document.getElementById('reportForm').reset();
+            setDates();
+            document.getElementById('anonymousOpt').checked = true;
+            showToast('Report submitted successfully!', '✅');
+            if (currentUser.role === 'admin') loadReports();
+        });
+
+        if (localStorage.getItem('snnhs_current_user')) {
+            showApp();
+        }
+    </script>
+</body>
+</html>
