@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SNNHS · Login</title>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        body {
+            background: #f0f7f0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .login-container {
+            max-width: 400px;
+            width: 100%;
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-image {
+            width: 100px;
+            height: 100px;
+            margin: 0 auto 1rem;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 4px solid #9fcb8b;
+            box-shadow: 0 8px 0 #0f3a13;
+            background: white;
+        }
+        
+        .logo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .logo h2 {
+            color: #1e5622;
+            font-size: 1.5rem;
+        }
+        
+        .logo p {
+            color: #2e6d2e;
+            font-size: 0.9rem;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 36px;
+            padding: 2rem;
+            box-shadow: 0 22px 36px -12px rgba(20, 80, 30, 0.25);
+            border: 1px solid #b7dcb7;
+        }
+        
+        .tab-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e2f4e0;
+            padding-bottom: 1rem;
+        }
+        
+        .tab-btn {
+            flex: 1;
+            background: none;
+            border: none;
+            padding: 0.8rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #7a9e7a;
+            cursor: pointer;
+            border-radius: 30px;
+            transition: all 0.3s;
+        }
+        
+        .tab-btn.active {
+            background: #1e5622;
+            color: white;
+            box-shadow: 0 4px 0 #0f3a13;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #1e5622;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        label i {
+            color: #2b7931;
+            width: 20px;
+        }
+        
+        input {
+            width: 100%;
+            padding: 1rem 1.3rem;
+            border: 2px solid #b7dcb7;
+            border-radius: 30px;
+            font-size: 1rem;
+            background: #fafefa;
+        }
+        
+        input:focus {
+            border-color: #2b7931;
+            outline: none;
+            box-shadow: 0 0 0 4px rgba(43, 121, 49, 0.15);
+        }
+        
+        .btn-login {
+            width: 100%;
+            background: #1e5622;
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #0f3a13;
+            transition: 0.1s ease;
+            margin-top: 1rem;
+        }
+        
+        .btn-login:hover {
+            background: #2b7931;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 0 #0f3a13;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .error-message {
+            color: #c53030;
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .error-message span {
+            flex: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo">
+            <div class="logo-image">
+                <img src="snnhs.jpg" alt="SNNHS Logo">
+            </div>
+            <h2>STO. NIÑO NHS</h2>
+            <p>MARIKINA CITY · DEPED NCR</p>
+        </div>
+        
+        <div class="login-card">
+            <div class="tab-buttons">
+                <button class="tab-btn active" id="loginTab">LOG IN</button>
+                <button class="tab-btn" id="signupTab">SIGN UP</button>
+                <button class="tab-btn" id="adminTab">ADMIN</button>
+            </div>
+            
+            <!-- USER LOGIN -->
+            <div id="loginForm">
+                <div class="form-group">
+                    <label for="loginEmail"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="loginEmail" placeholder="Enter your email">
+                </div>
+                <div class="form-group">
+                    <label for="loginPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter your password">
+                </div>
+                <button class="btn-login" id="loginBtn"><i class="fas fa-sign-in-alt"></i> LOG IN</button>
+                <div id="loginError" class="error-message hidden"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+            </div>
+            
+            <!-- SIGN UP -->
+            <div id="signupForm" class="hidden">
+                <div class="form-group">
+                    <label for="signupName"><i class="fas fa-user-circle"></i> Full Name</label>
+                    <input type="text" id="signupName" placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="signupEmail"><i class="fas fa-envelope"></i> Email</label>
+                    <input type="email" id="signupEmail" placeholder="your@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="signupPassword"><i class="fas fa-lock"></i> Password</label>
+                    <input type="password" id="signupPassword" placeholder="Create password">
+                </div>
+                <div class="form-group">
+                    <label for="signupConfirm"><i class="fas fa-lock"></i> Confirm Password</label>
+                    <input type="password" id="signupConfirm" placeholder="Confirm password">
+                </div>
+                <button class="btn-login" id="signupBtn"><i class="fas fa-user-plus"></i> CREATE ACCOUNT</button>
+                <div id="signupError" class="error-message hidden"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+            </div>
+
+            <!-- ADMIN LOGIN -->
+            <div id="adminForm" class="hidden">
+                <div class="form-group">
+                    <label for="adminEmail"><i class="fas fa-user-shield"></i> Admin Email</label>
+                    <input type="email" id="adminEmail" placeholder="Admin email">
+                </div>
+                <div class="form-group">
+                    <label for="adminPassword"><i class="fas fa-lock"></i> Admin Password</label>
+                    <input type="password" id="adminPassword" placeholder="Enter admin password">
+                </div>
+                <button class="btn-login" id="adminLoginBtn"><i class="fas fa-user-shield"></i> ADMIN LOGIN</button>
+                <div id="adminError" class="error-message hidden"><i class="fas fa-exclamation-circle"></i> <span></span></div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        const loginTab = document.getElementById('loginTab');
+        const signupTab = document.getElementById('signupTab');
+        const adminTab  = document.getElementById('adminTab');
+
+        const loginForm  = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const adminForm  = document.getElementById('adminForm');
+
+        const loginError  = document.getElementById('loginError');
+        const signupError = document.getElementById('signupError');
+        const adminError  = document.getElementById('adminError');
+
+        function hideError(div) {
+            div.classList.add('hidden');
+            div.querySelector('span').innerText = '';
+        }
+
+        function showError(div, message) {
+            div.querySelector('span').innerText = message;
+            div.classList.remove('hidden');
+        }
+
+        function activateTab(tab) {
+            [loginTab, signupTab, adminTab].forEach(t => t.classList.remove('active'));
+            [loginForm, signupForm, adminForm].forEach(f => f.classList.add('hidden'));
+            hideError(loginError);
+            hideError(signupError);
+            hideError(adminError);
+
+            if (tab === 'login') {
+                loginTab.classList.add('active');
+                loginForm.classList.remove('hidden');
+            } else if (tab === 'signup') {
+                signupTab.classList.add('active');
+                signupForm.classList.remove('hidden');
+            } else if (tab === 'admin') {
+                adminTab.classList.add('active');
+                adminForm.classList.remove('hidden');
+            }
+        }
+
+        loginTab.addEventListener('click', () => activateTab('login'));
+        signupTab.addEventListener('click', () => activateTab('signup'));
+        adminTab.addEventListener('click', () => activateTab('admin'));
+
+        function getUsers() {
+            try {
+                const data = localStorage.getItem('snnhs_users');
+                if (!data) return [];
+                const parsed = JSON.parse(data);
+                return Array.isArray(parsed) ? parsed : [];
+            } catch (e) {
+                return [];
+            }
+        }
+
+        function saveUsers(users) {
+            try {
+                localStorage.setItem('snnhs_users', JSON.stringify(users));
+            } catch (e) {}
+        }
+
+        // Initialize default users and admin
+        let users = getUsers();
+        let adminExists = users.some(u => u.email === 'admin@snnhs.edu.ph');
+        if (!adminExists) {
+            users.push({
+                name: 'Admin User',
+                email: 'admin@snnhs.edu.ph',
+                password: 'admin123',
+                role: 'admin'
+            });
+            saveUsers(users);
+        }
+
+        // USER LOGIN
+        document.getElementById('loginBtn').addEventListener('click', function() {
+            hideError(loginError);
+
+            let email = document.getElementById('loginEmail').value.trim();
+            let password = document.getElementById('loginPassword').value.trim();
+            
+            if (!email || !password) {
+                showError(loginError, 'Please enter both email and password');
+                return;
+            }
+            
+            let users = getUsers();
+            let user = users.find(u => u.email === email && u.password === password);
+            
+            if (!user) {
+                showError(loginError, 'Invalid email or password');
+                return;
+            }
+
+            if (user.role === 'admin') {
+                showError(loginError, 'Please use the ADMIN tab to log in as admin');
+                return;
+            }
+
+            localStorage.setItem('snnhs_current_user', JSON.stringify({
+                name: user.name,
+                email: user.email,
+                role: user.role || 'user'
+            }));
+            window.location.href = 'snnhs_campus_guard.html';
+        });
+
+        // SIGN UP
+        document.getElementById('signupBtn').addEventListener('click', function() {
+            hideError(signupError);
+
+            let name = document.getElementById('signupName').value.trim();
+            let email = document.getElementById('signupEmail').value.trim();
+            let password = document.getElementById('signupPassword').value.trim();
+            let confirm = document.getElementById('signupConfirm').value.trim();
+            
+            if (!name || !email || !password || !confirm) {
+                showError(signupError, 'Please fill in all fields');
+                return;
+            }
+            
+            if (password !== confirm) {
+                showError(signupError, 'Passwords do not match');
+                return;
+            }
+            
+            let users = getUsers();
+            
+            if (users.find(u => u.email === email)) {
+                showError(signupError, 'Email already registered');
+                return;
+            }
+            
+            let newUser = {
+                name: name,
+                email: email,
+                password: password,
+                role: 'user'
+            };
+            
+            users.push(newUser);
+            saveUsers(users);
+            localStorage.setItem('snnhs_current_user', JSON.stringify({
+                name: name,
+                email: email,
+                role: 'user'
+            }));
+            
+            window.location.href = 'snnhs_campus_guard.html';
+        });
+
+        // ADMIN LOGIN
+        document.getElementById('adminLoginBtn').addEventListener('click', function() {
+            hideError(adminError);
+
+            let email = document.getElementById('adminEmail').value.trim();
+            let password = document.getElementById('adminPassword').value.trim();
+
+            if (!email || !password) {
+                showError(adminError, 'Please enter admin email and password');
+                return;
+            }
+
+            let users = getUsers();
+            let user = users.find(u => u.email === email && u.password === password && u.role === 'admin');
+
+            if (!user) {
+                showError(adminError, 'Invalid admin credentials');
+                return;
+            }
+
+            localStorage.setItem('snnhs_current_user', JSON.stringify({
+                name: user.name,
+                email: user.email,
+                role: 'admin'
+            }));
+            window.location.href = 'snnhs_campus_guard.html';
+        });
+
+        // Clear errors while typing
+        ['loginEmail', 'loginPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => hideError(loginError));
+        });
+
+        ['signupName', 'signupEmail', 'signupPassword', 'signupConfirm'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => hideError(signupError));
+        });
+
+        ['adminEmail', 'adminPassword'].forEach(id => {
+            document.getElementById(id).addEventListener('input', () => hideError(adminError));
+        });
+    </script>
+</body>
+</html>
